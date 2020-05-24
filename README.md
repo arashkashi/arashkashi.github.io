@@ -49,7 +49,7 @@ The following will create a new folder `auth` with Lumen framework.
 ## Build Docker Image
 
 ```bash
-$ docker build --file .docker/Dockerfile -t clinet-auth-docker .
+$ docker build --file .docker/Dockerfile -t nesha-docker .
 ```
 
 *-t* indiates the name of the image
@@ -69,6 +69,10 @@ In order to see all the images created locally run the above command.
 `$ docker run --name laravel-app --rm -p 8080:80 laravel-docker `
 
 `--name` assigned a name to the newly running container.
+
+`--rm` will remove the app after we hit ctrl+C
+
+`8080:80` map 8080 on local machine to 80 on container.
 
 `larave-docker` is the name of docker image.
 
@@ -93,6 +97,8 @@ docker ps -a
 
 
 #####  Using docker-compose
+
+you can go inside and execute something inside the container
 
 $ docker-compose exec app /bin/bash
 
@@ -124,7 +130,11 @@ In order to migrate the database, i.e. creating the table etc. we need to run ar
 ## Finding where the php.ini is
 '''php -i | grep php.ini'''
 
-
+## Enableing new config for Apache 2
+'''
+a2dissite 000-default.conf
+a2ensite 001-lumen-api.conf
+'''
 
 
 
