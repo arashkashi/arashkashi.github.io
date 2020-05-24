@@ -1,7 +1,9 @@
 /vendor
+./docker-compose.yml
 .DS_Store
 /.idea
 Homestead.json
 Homestead.yaml
 .env
 .phpunit.result.cache
+env
