@@ -1,0 +1,56 @@
+<!-- <div style="text-align:center; margin-top: 100px; "> -->
+    <!-- <mat-card style="margin-top:10px; width: 50%;">   -->
+    <!-- <mat-card-content>   -->
+        <!-- <ul>  
+            <li *ngFor="let file of files">  
+                <mat-progress-bar [value]="file.progress"></mat-progress-bar>  
+                <span id="file-label">  
+                     {{file.name}} 
+                </span>  
+            </li>  
+        </ul>   -->
+    <!-- </mat-card-content>   -->
+    <!-- </mat-card> -->
+    <!-- <mat-card-actions>   -->
+        <!-- <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;" />
+        <button mat-button color="warn" (click)="onClick()">  
+            <mat-icon>file_upload</mat-icon>  
+            Upload  
+        </button>   -->
+    <!-- </mat-card-actions>   -->
+    
+
+    
+<!-- </div> -->
+
+<!-- <div class="form-group">
+    <label for="file">Choose File</label>
+    <input type="file"
+           id="file"
+           (change)="handleFileInput($event.target.files)">
+</div> -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h3>Choose File</h3>            
+            <div class="form-group">
+                <input type="file" name="image" (change)="fileProgress($event)" />
+            </div>
+            <div *ngIf="fileUploadProgress">
+                Upload progress: {{ fileUploadProgress }}
+            </div>
+            <div class="image-preview mb-3" *ngIf="previewUrl">
+                <img [src]="previewUrl" height="300" />                 
+            </div>
+ 
+            <div class="mb-3" *ngIf="uploadedFilePath">
+                {{uploadedFilePath}}
+            </div>
+             
+            <div class="form-group" >
+                <button  *ngIf="showSubmitButton" class="btn btn-primary"  (click)="onSubmit()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

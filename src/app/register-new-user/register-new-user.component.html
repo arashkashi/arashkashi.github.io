@@ -1,0 +1,36 @@
+<h1 class="col-container">Register New User</h1>
+
+<br/>
+
+<form class="col-container" [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm.value)">
+
+  <div>
+    <label for="name">
+      tr_ Full Name
+    </label>
+    <input id="name" type="text" formControlName="name">
+  </div>
+
+  <div>
+    <label for="email">
+      tr_ Email
+    </label>
+    <input id="email" type="username" autocomplete="username" formControlName="email">
+  </div>
+
+  <div>
+    <label for="password">
+      tr_ Password
+    </label>
+    <input id="password" type="password" autocomplete="new-password" formControlName="password">
+  </div>
+
+  <div>
+    <label for="confirm_password">
+      tr_ Confirm Password
+    </label>
+    <input id="confirm_password" type="password" autocomplete="new-password" formControlName="password_confirmation">
+  </div>
+  <p *ngIf="error">{{error}}</p>
+  <button class="button"  type="submit" *ngIf="registerForm.status=='VALID'">Register</button>
+</form>

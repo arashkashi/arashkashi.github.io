@@ -1,0 +1,24 @@
+<h1 class="col-container">Add New Product</h1>
+
+<br/>
+
+<form class="col-container" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+
+  <div>
+    <label for="name">
+      tr_ Full Name
+    </label>
+    <input id="name" type="text" [(ngModel)]="enteredName" formControlName="name">
+  </div>
+
+  <div>
+    <label for="properties">
+      tr_ Properties
+    </label>
+    <input id="properties" type="text" [(ngModel)]="enteredProperties" formControlName="properties">
+  </div>
+
+  <p *ngIf="error">{{error}}</p>
+  <button class="button"  type="submit" *ngIf="form.status=='VALID' && !product_id">Add</button>
+  <button class="button"  type="submit" *ngIf="form.status=='VALID' && product_id">Update</button>
+</form>

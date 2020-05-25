@@ -1,0 +1,30 @@
+<!-- <h1 class="col-container">Login</h1> -->
+
+<br/>
+
+<form class="col-container" [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+
+
+  <div>
+    <label for="email">
+      ایمیل
+    </label>
+    <input id="email" type="username" autocomplete="username" formControlName="email">
+  </div>
+
+  <div>
+    <label for="password">
+      کلمه عبور
+    </label>
+    <input id="password" type="password" autocomplete="new-password" formControlName="password">
+  </div>
+
+  <p *ngIf="error">{{error}}</p>
+  <button class="button"  type="submit" *ngIf="loginForm.status=='VALID'">ورود</button>
+</form>
+<br><br><br><br>
+<br><br>
+<br><br><br><br>
+<div class="card card-small" (click)="onRegisterClick()" tabindex="0">
+  <span>برای ثبت نام اینجا </span>
+</div>
