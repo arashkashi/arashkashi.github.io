@@ -43,3 +43,11 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/vendor
+./docker-compose.yml
+.DS_Store
+/.idea
+Homestead.json
+Homestead.yaml
+.phpunit.result.cache
+.env

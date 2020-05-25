@@ -1,0 +1,8 @@
+
+localhost
+root * /Users/arash/Desktop/nesha/public
+encode gzip
+php_fastcgi / 127.0.0.1:9000 /etc/php-fpm.conf.default
+rewrite * /index.php?{query}
+
+log stdout
