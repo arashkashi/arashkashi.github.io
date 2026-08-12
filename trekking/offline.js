@@ -17,7 +17,7 @@ var app, reg = null, state = 'unknown', tileCount = 0, swVersion = null;
 var badge = null;
 
 var CSS = [
-  '.tmo{display:flex;align-items:center;gap:7px;margin:0 10px 6px 0;padding:5px 9px;',
+  '.tmo{display:inline-flex;align-items:center;gap:7px;margin:0 10px 6px 0;padding:5px 9px;',
   '  font-size:11.5px;font-weight:600;background:rgba(255,253,248,.95);',
   '  border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);',
   '  color:var(--ink-soft);cursor:default}',
