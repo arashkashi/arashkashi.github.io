@@ -16,7 +16,7 @@
  *   would double the storage and answer to nobody.
  */
 
-var VERSION = 'fddd70b1fcb9';
+var VERSION = 'c4dd5b689d29';
 var SHELL_CACHE = 'tm-shell-' + VERSION;
 var TILE_CACHE  = 'tm-tiles-v1';
 var TILE_LIMIT  = 1200;                 // roughly 25-30 MB of raster tiles
@@ -99,6 +99,10 @@ self.addEventListener('fetch', function (e) {
 
   // Overpass stays online-only; the app has its own inspectable cache.
   if (/overpass|maps\.mail\.ru|nominatim/.test(url)) return;
+
+  // Never let the worker answer for its own script or the manifest. Serving a
+  // cached sw.js would make the app permanently unable to update itself.
+  if (/\/sw\.js(\?|$)/.test(url)) return;
 
   if (isTile(url)) {
     e.respondWith(
