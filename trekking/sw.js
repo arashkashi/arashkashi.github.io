@@ -2,7 +2,7 @@
  *
  * Makes the app work with no connection at all after one visit.
  *
- *   App shell (32 files, 11.3 MB) — precached on install, then
+ *   App shell (33 files, 11.3 MB) — precached on install, then
  *   served cache-first. This is what lets the page boot offline.
  *
  *   Map tiles — cached as they are viewed, never prefetched. Caching what the
@@ -16,7 +16,7 @@
  *   would double the storage and answer to nobody.
  */
 
-var VERSION = 'c4dd5b689d29';
+var VERSION = 'd8372be3117b';
 var SHELL_CACHE = 'tm-shell-' + VERSION;
 var TILE_CACHE  = 'tm-tiles-v1';
 var TILE_LIMIT  = 1200;                 // roughly 25-30 MB of raster tiles
@@ -41,6 +41,7 @@ var SHELL = [
   "./contextmenu.js",
   "./locate.js",
   "./offline.js",
+  "./sheet.js",
   "./app.js",
   "./data/dem.js",
   "./data/contours_major.js",

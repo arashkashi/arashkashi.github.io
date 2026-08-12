@@ -114,7 +114,7 @@ function init() {
   [['TMSearch', window.TMSearch], ['TMRoute', window.TMRoute],
    ['TMGpx', window.TMGpx], ['TMCache', window.TMCache],
    ['TMContext', window.TMContext], ['TMLocate', window.TMLocate],
-   ['TMOffline', window.TMOffline]].forEach(function (m) {
+   ['TMOffline', window.TMOffline], ['TMSheet', window.TMSheet]].forEach(function (m) {
     if (!m[1] || typeof m[1].init !== 'function') return;
     try { m[1].init(window.TMApp); }
     catch (err) { console.error(m[0] + ' failed to start:', err); }
