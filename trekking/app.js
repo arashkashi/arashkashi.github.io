@@ -49,17 +49,17 @@ function init() {
   // which shows up as blank squares. TMTiles.layer retries dropped tiles and
   // leaves a clickable placeholder if it finally gives up.
   var topo = TMTiles.layer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    maxZoom: 17, subdomains: 'abc',
+    maxZoom: 17, subdomains: 'abc', crossOrigin: 'anonymous',
     attribution: osmAttr + ', <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)'
   });
   var standard = TMTiles.layer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19, attribution: osmAttr
+    maxZoom: 19, crossOrigin: 'anonymous', attribution: osmAttr
   });
   var cyclosm = TMTiles.layer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-    maxZoom: 18, subdomains: 'abc', attribution: osmAttr + ', CyclOSM'
+    maxZoom: 18, subdomains: 'abc', crossOrigin: 'anonymous', attribution: osmAttr + ', CyclOSM'
   });
   var sat = TMTiles.layer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 18, attribution: 'Imagery &copy; Esri'
+    maxZoom: 18, crossOrigin: 'anonymous', attribution: 'Imagery &copy; Esri'
   });
 
   topo.addTo(map);
@@ -113,7 +113,8 @@ function init() {
 
   [['TMSearch', window.TMSearch], ['TMRoute', window.TMRoute],
    ['TMGpx', window.TMGpx], ['TMCache', window.TMCache],
-   ['TMContext', window.TMContext], ['TMLocate', window.TMLocate]].forEach(function (m) {
+   ['TMContext', window.TMContext], ['TMLocate', window.TMLocate],
+   ['TMOffline', window.TMOffline]].forEach(function (m) {
     if (!m[1] || typeof m[1].init !== 'function') return;
     try { m[1].init(window.TMApp); }
     catch (err) { console.error(m[0] + ' failed to start:', err); }
