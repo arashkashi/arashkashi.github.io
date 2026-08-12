@@ -1,0 +1,412 @@
+/* TrekkingMap — Liguria
+   Palette borrowed from Italian IGM topo sheets: parchment, contour bistre,
+   Ligurian pine, and the red-white waymark stripe used on Alta Via blazes. */
+
+:root {
+  --paper:      #f4efe4;
+  --paper-2:    #ebe3d3;
+  --ink:        #2c2822;
+  --ink-soft:   #6b6154;
+  --line:       #d5c9b2;
+  --contour:    #a9793f;
+  --pine:       #2f5d46;
+  --pine-2:     #3d7a5c;
+  --blaze:      #c0392b;
+  --sky:        #4a7fa5;
+  --shadow:     0 1px 3px rgba(60,45,25,.18), 0 6px 20px rgba(60,45,25,.10);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; height: 100%;
+  font: 15px/1.5 -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+body { display: flex; flex-direction: column; overflow: hidden; }
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px;
+  padding: 10px 20px;
+  background: linear-gradient(180deg, #fffdf8, var(--paper-2));
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  z-index: 500;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand .mark {
+  font-size: 26px; color: var(--pine);
+  text-shadow: 0 1px 0 #fff;
+}
+.brand h1 {
+  margin: 0; font-size: 19px; font-weight: 650; letter-spacing: -.2px;
+}
+.brand h1 em {
+  font-style: normal; font-weight: 400; color: var(--blaze);
+}
+.brand p {
+  margin: 1px 0 0; font-size: 12px; color: var(--ink-soft);
+}
+
+.topstats { display: flex; gap: 26px; }
+.topstats .stat { text-align: right; }
+.topstats .stat b {
+  display: block; font-size: 17px; font-weight: 650;
+  font-variant-numeric: tabular-nums; color: var(--pine);
+}
+.topstats .stat span { font-size: 11px; color: var(--ink-soft); }
+
+/* ---------- shell ---------- */
+
+.shell { flex: 1 1 auto; display: flex; min-height: 0; }
+
+.panel {
+  flex: 0 0 340px;
+  overflow-y: auto;
+  background: var(--paper);
+  border-right: 1px solid var(--line);
+  padding: 16px;
+  z-index: 400;
+}
+
+.block {
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(60,45,25,.06);
+}
+
+.block h2 {
+  margin: 0 0 12px;
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--pine);
+}
+
+/* ---------- form controls ---------- */
+
+.field { display: block; margin-bottom: 12px; }
+.field > span {
+  display: block; font-size: 12px; font-weight: 600;
+  color: var(--ink-soft); margin-bottom: 5px;
+}
+.field output {
+  display: inline-block; margin-top: 3px;
+  font-size: 13px; font-weight: 650; color: var(--blaze);
+}
+
+input[type=range] {
+  width: 100%; accent-color: var(--pine); margin: 0;
+}
+
+select {
+  width: 100%; padding: 7px 9px;
+  font: inherit; font-size: 13px;
+  border: 1px solid var(--line); border-radius: 6px;
+  background: #fff; color: var(--ink);
+}
+
+.hint {
+  font-size: 12px; line-height: 1.45;
+  color: var(--ink-soft);
+  background: #fbf7ec;
+  border-left: 3px solid var(--contour);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 10px; margin: 10px 0;
+}
+.hint b { color: var(--ink); }
+
+.endpoints { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.ep {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 9px; font-size: 12.5px;
+  border: 1px dashed var(--line); border-radius: 7px;
+  color: var(--ink-soft);
+}
+.ep.set { border-style: solid; border-color: var(--pine-2); color: var(--ink); background: #f2f8f4; }
+.ep i {
+  flex: 0 0 20px; height: 20px; line-height: 20px; text-align: center;
+  font-style: normal; font-size: 11px; font-weight: 700;
+  border-radius: 50%; background: var(--ink-soft); color: #fff;
+}
+.ep.set i { background: var(--pine); }
+.ep span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- buttons ---------- */
+
+.btnrow { display: flex; gap: 8px; }
+.btn {
+  flex: 1; padding: 9px 12px;
+  font: inherit; font-size: 13px; font-weight: 600;
+  border-radius: 7px; border: 1px solid transparent;
+  cursor: pointer; transition: .15s;
+}
+.btn.primary { background: var(--pine); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: var(--pine-2); }
+.btn.primary:disabled { background: #c9c2b4; cursor: not-allowed; }
+.btn.ghost { background: #fff; border-color: var(--line); color: var(--ink-soft); }
+.btn.ghost:hover { border-color: var(--ink-soft); color: var(--ink); }
+.btn.wide { width: 100%; margin-top: 8px; background: #fff; border-color: var(--line); color: var(--pine); }
+.btn.wide:hover { background: #f2f8f4; border-color: var(--pine-2); }
+
+/* ---------- summary ---------- */
+
+.grid4 {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 6px; margin-bottom: 12px;
+}
+.metric {
+  text-align: center; padding: 8px 2px;
+  background: var(--paper-2); border-radius: 7px;
+}
+.metric b {
+  display: block; font-size: 16px; font-weight: 650;
+  font-variant-numeric: tabular-nums; color: var(--pine);
+}
+.metric span { font-size: 10px; color: var(--ink-soft); }
+
+.day {
+  border: 1px solid var(--line); border-left: 3px solid var(--blaze);
+  border-radius: 0 8px 8px 0;
+  padding: 9px 11px; margin-bottom: 7px;
+  background: #fff; cursor: pointer; transition: .15s;
+}
+.day:hover { background: #fbf7ec; transform: translateX(2px); }
+.day h4 {
+  margin: 0 0 3px; font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .05em; color: var(--blaze);
+}
+.day .to { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.day .to .arrow { color: var(--ink-soft); font-weight: 400; }
+.day .nums {
+  font-size: 11.5px; color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.day .nums b { color: var(--ink); font-weight: 600; }
+.day .stay {
+  margin-top: 5px; padding-top: 5px; border-top: 1px dotted var(--line);
+  font-size: 11.5px;
+}
+.day .stay .tag {
+  display: inline-block; padding: 1px 6px; margin-right: 5px;
+  font-size: 10px; font-weight: 700; border-radius: 4px;
+  background: var(--pine); color: #fff;
+}
+.day .stay.none .tag { background: var(--ink-soft); }
+
+/* ---------- layers ---------- */
+
+.layers { display: flex; flex-direction: column; gap: 3px; }
+.layers label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; padding: 4px 5px; border-radius: 5px; cursor: pointer;
+}
+.layers label:hover { background: var(--paper-2); }
+.layers input { accent-color: var(--pine); margin: 0; }
+.layers .swatch {
+  width: 14px; height: 3px; border-radius: 2px; flex: 0 0 14px;
+}
+/* Also used by the legend below, which is outside .layers — without that
+   second selector the legend swatches collapse to 0x0 and vanish. */
+.layers .dot,
+.legend .dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 10px; }
+.legend .dot { box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
+
+.legend {
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px;
+  font-size: 11px; color: var(--ink-soft);
+}
+.legend div { display: flex; align-items: center; gap: 6px; }
+
+.credit {
+  font-size: 10.5px; line-height: 1.5; color: var(--ink-soft);
+  padding: 4px 2px;
+}
+.credit b { color: var(--ink); font-weight: 600; }
+
+/* ---------- map ---------- */
+
+.mapwrap { flex: 1 1 auto; position: relative; min-width: 0; }
+#map { position: absolute; inset: 0; background: var(--paper-2); }
+
+.leaflet-container { font: inherit; }
+.leaflet-popup-content-wrapper { border-radius: 9px; box-shadow: var(--shadow); }
+.leaflet-popup-content { margin: 11px 13px; font-size: 13px; line-height: 1.45; }
+
+.pop h4 { margin: 0 0 3px; font-size: 14px; }
+.pop .cat {
+  display: inline-block; padding: 1px 7px; margin-bottom: 6px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .04em; border-radius: 4px;
+  background: var(--pine); color: #fff;
+}
+.pop table { border-collapse: collapse; margin-top: 4px; }
+.pop td { padding: 1px 0; font-size: 12px; vertical-align: top; }
+.pop td:first-child { color: var(--ink-soft); padding-right: 10px; white-space: nowrap; }
+.pop a { color: var(--sky); }
+.pop .setbtns { margin-top: 8px; display: flex; gap: 5px; }
+.pop .setbtns button {
+  flex: 1; padding: 4px 6px; font: inherit; font-size: 11px; font-weight: 600;
+  border: 1px solid var(--line); border-radius: 5px;
+  background: #fff; color: var(--pine); cursor: pointer;
+}
+.pop .setbtns button:hover { background: #f2f8f4; border-color: var(--pine-2); }
+
+/* Contour elevation labels drawn as map tooltips */
+.ele-label {
+  background: none; border: none; box-shadow: none; padding: 0;
+  color: var(--contour); font-size: 10px; font-weight: 700;
+  text-shadow: 0 0 3px var(--paper), 0 0 3px var(--paper), 0 0 2px var(--paper);
+}
+.ele-label::before { display: none; }
+
+/* Day markers on the planned route */
+.daymark {
+  background: var(--blaze); color: #fff;
+  width: 22px; height: 22px; line-height: 22px;
+  border-radius: 50%; text-align: center;
+  font-size: 11px; font-weight: 700;
+  border: 2px solid #fff; box-shadow: var(--shadow);
+}
+.endmark {
+  background: var(--pine); color: #fff;
+  width: 26px; height: 26px; line-height: 26px;
+  border-radius: 50%; text-align: center;
+  font-size: 13px; font-weight: 700;
+  border: 2px solid #fff; box-shadow: var(--shadow);
+}
+
+/* ---------- elevation profile ---------- */
+
+.profile {
+  position: absolute; left: 12px; right: 12px; bottom: 12px;
+  height: 190px;
+  background: rgba(255,253,248,.97);
+  border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: var(--shadow);
+  z-index: 600;
+  display: flex; flex-direction: column;
+}
+.profile-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 12px 3px;
+}
+.profile-head h3 {
+  margin: 0; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--pine);
+}
+.profile-head button {
+  border: none; background: none; cursor: pointer;
+  color: var(--ink-soft); font-size: 14px; line-height: 1;
+}
+#profile-chart { flex: 1 1 auto; min-height: 0; }
+#profile-chart svg { display: block; width: 100%; height: 100%; }
+
+/* ---------- loading ---------- */
+
+.loading {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; background: var(--paper);
+  transition: opacity .35s;
+}
+.loading.done { opacity: 0; pointer-events: none; }
+.loading p { font-size: 13px; color: var(--ink-soft); margin: 0; }
+.spinner {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid var(--line); border-top-color: var(--pine);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 900px) {
+  .shell { flex-direction: column; }
+  .panel { flex: 0 0 auto; max-height: 45vh; border-right: none; border-bottom: 1px solid var(--line); }
+  .topstats { display: none; }
+}
+
+/* zoom-threshold notes inside layer toggle labels */
+.layers label em {
+  font-style: normal; font-size: 11px; color: var(--ink-soft); opacity: .8;
+}
+
+/* ---------- tile loading state ---------- */
+
+/* [hidden] resolves to display:none in the UA stylesheet, which any author
+   `display` rule outranks. Without these, the panels below stay on screen
+   even when JS sets .hidden = true. */
+.profile[hidden] { display: none; }
+.block[hidden]   { display: none; }
+
+/* A tile that exhausted its retries. Click it to re-request just that tile. */
+.leaflet-tile.tm-tile-failed {
+  opacity: 1 !important;
+  cursor: pointer;
+  pointer-events: auto;
+  background-color: #efe8d8;
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(169,121,63,.10) 0 8px, rgba(169,121,63,0) 8px 16px),
+    url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'>\
+<g fill='none' stroke='%23a9793f' stroke-width='2.2' stroke-linecap='round'>\
+<path d='M40 28a12 12 0 1 1-3.6-8.6'/><path d='M37 11v9h-9'/></g></svg>");
+  background-repeat: repeat, no-repeat;
+  background-position: 0 0, center;
+  box-shadow: inset 0 0 0 1px rgba(169,121,63,.35);
+}
+.leaflet-tile.tm-tile-failed:hover { background-color: #e7dcc2; }
+
+.leaflet-tile.tm-tile-retrying {
+  opacity: 1 !important;
+  background: #efe8d8 url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>\
+<circle cx='20' cy='20' r='13' fill='none' stroke='%23c9b894' stroke-width='3'/>\
+<path d='M20 7a13 13 0 0 1 13 13' fill='none' stroke='%232f5d46' stroke-width='3' stroke-linecap='round'>\
+<animateTransform attributeName='transform' type='rotate' from='0 20 20' to='360 20 20'\
+ dur='0.9s' repeatCount='indefinite'/></path></svg>") center no-repeat;
+}
+
+/* status chip, bottom-right above the attribution */
+.tm-tilestatus {
+  display: flex; align-items: center; gap: 7px;
+  margin: 0 10px 6px 0; padding: 5px 9px;
+  font-size: 11.5px; font-weight: 600;
+  background: rgba(255,253,248,.95);
+  border: 1px solid var(--line); border-radius: 20px;
+  box-shadow: var(--shadow);
+  color: var(--ink-soft);
+}
+.tm-tilestatus .dot {
+  width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px;
+  background: var(--pine);
+}
+.tm-tilestatus.busy .dot { background: #d8a13c; animation: tmpulse 1s infinite; }
+.tm-tilestatus.bad  .dot { background: var(--blaze); }
+.tm-tilestatus.bad { color: var(--blaze); border-color: #e3b5ae; }
+@keyframes tmpulse { 50% { opacity: .3; } }
+
+.tm-tilestatus .retry {
+  font: inherit; font-size: 11px; font-weight: 700;
+  padding: 2px 8px; margin-left: 2px;
+  border: 1px solid var(--blaze); border-radius: 12px;
+  background: var(--blaze); color: #fff; cursor: pointer;
+}
+.tm-tilestatus .retry:hover { background: #a53023; }
+
+/* The status chips live bottom-right, exactly where the elevation profile
+   opens. Lift them clear rather than letting them sit on top of the chart —
+   the tile "Retry failed" button must stay reachable. */
+.leaflet-bottom.leaflet-right { transition: transform .18s ease; }
+body.tm-profile-open .leaflet-bottom.leaflet-right { transform: translateY(-198px); }
