@@ -492,16 +492,20 @@ body .tm-tilestatus, body .tmc, body .tmo {
   body .tm-tilestatus .retry, body .tmc button { display: none; }
 
   /* Expanded: something needs attention, or the user tapped it. */
-  body .tm-tilestatus.busy, body .tm-tilestatus.bad,
-  body .tmc.busy, body .tmc.bad,
-  body .tmo.installing, body .tmo.offline,
+  /* Only a real problem or a deliberate tap earns space on a phone. `busy`
+     is the normal state while panning — tiles and huts are almost always
+     loading something — and expanding for it makes the chips flicker open
+     every few seconds. Busy just pulses its dot. */
+  body .tm-tilestatus.bad,
+  body .tmc.bad,
+  body .tmo.offline,
   body .tm-tilestatus.tmx-open, body .tmc.tmx-open, body .tmo.tmx-open {
     width: auto; height: auto; padding: 5px 9px;
     border-radius: 20px; justify-content: flex-start;
   }
-  body .tm-tilestatus.busy .txt, body .tm-tilestatus.bad .txt,
-  body .tmc.busy .t, body .tmc.bad .t,
-  body .tmo.installing .t, body .tmo.offline .t,
+  body .tm-tilestatus.bad .txt,
+  body .tmc.bad .t,
+  body .tmo.offline .t,
   body .tm-tilestatus.tmx-open .txt, body .tmc.tmx-open .t,
   body .tmo.tmx-open .t { display: inline; }
   body .tm-tilestatus.bad .retry, body .tmc.bad button,
@@ -510,3 +514,5 @@ body .tm-tilestatus, body .tmc, body .tmo {
   /* A dot alone is not an obvious control; hint that it can be tapped. */
   body .tm-tilestatus, body .tmc, body .tmo { cursor: pointer; }
 }
+
+

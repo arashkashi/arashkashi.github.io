@@ -482,7 +482,15 @@ function refreshPanel() {
     var rows =
       '<div class="tmc-row"><span>Regions cached</span><b>' + mine.cells + '</b></div>' +
       '<div class="tmc-row"><span>Huts stored</span><b>' + mine.huts.toLocaleString() + '</b></div>' +
-      '<div class="tmc-row"><span>Space used</span><b>' + fmtBytes(mine.bytes) + '</b></div>';
+      '<div class="tmc-row"><span>Hut data</span><b>' + fmtBytes(mine.bytes) + '</b></div>';
+
+    var off = window.TMOffline && TMOffline.summary();
+    if (off && off.supported) {
+      rows += '<div class="tmc-row"><span>Map tiles saved</span><b>' +
+        (off.tiles || 0).toLocaleString() + '</b></div>' +
+        '<div class="tmc-row"><span>App saved offline</span><b>' +
+        (off.state === 'ready' ? 'yes' : off.state) + '</b></div>';
+    }
 
     if (q && q.quota) {
       var pct = (mine.bytes / q.quota) * 100;
@@ -499,16 +507,106 @@ function refreshPanel() {
   });
 }
 
+/**
+ * Download the tiles for the current view so the map itself works offline here.
+ *
+ * Deliberately bounded to what is on screen plus one zoom level in. Downloading
+ * a whole region across many zooms is bulk downloading, which the OpenStreetMap
+ * and OpenTopoMap tile policies prohibit; asking for the view you are looking at
+ * is a different thing and stays within a few hundred tiles. The count is shown
+ * before anything is fetched.
+ */
+function viewTiles(extraZooms) {
+  var map = app.map, out = [];
+  var z0 = map.getZoom();
+  for (var z = z0; z <= Math.min(z0 + (extraZooms || 1), 17); z++) {
+    var b = map.getBounds();
+    var nw = map.project(b.getNorthWest(), z).divideBy(256).floor();
+    var se = map.project(b.getSouthEast(), z).divideBy(256).floor();
+    for (var x = nw.x; x <= se.x; x++) {
+      for (var y = nw.y; y <= se.y; y++) out.push({ z: z, x: x, y: y });
+    }
+  }
+  return out;
+}
+
+function activeTileUrl(t) {
+  var layer = null;
+  app.map.eachLayer(function (l) { if (l instanceof L.TileLayer) layer = l; });
+  if (!layer) return null;
+  var subs = layer.options.subdomains || 'abc';
+  return L.Util.template(layer._url, L.extend({
+    s: typeof subs === 'string' ? subs[Math.abs(t.x + t.y) % subs.length]
+                                : subs[Math.abs(t.x + t.y) % subs.length],
+    x: t.x, y: t.y, z: t.z, r: ''
+  }, layer.options));
+}
+
+/** Warm the service worker's tile cache by requesting each tile once. */
+function saveView(onProgress) {
+  var tiles = viewTiles(1);
+  var done = 0, failed = 0;
+  var queue = tiles.slice();
+
+  function next() {
+    if (!queue.length) return Promise.resolve();
+    var t = queue.shift();
+    var url = activeTileUrl(t);
+    if (!url) { done++; return next(); }
+    return new Promise(function (res) {
+      // An <img> load goes through the service worker exactly as a map tile
+      // does, so it lands in the same cache under the same key.
+      var im = new Image();
+      im.crossOrigin = 'anonymous';
+      im.onload = function () { done++; res(); };
+      im.onerror = function () { failed++; done++; res(); };
+      im.src = url;
+    }).then(function () {
+      if (onProgress) onProgress(done, tiles.length, failed);
+      return next();
+    });
+  }
+
+  // A little concurrency, but not a flood: these are shared community servers.
+  var lanes = [];
+  for (var i = 0; i < 4; i++) lanes.push(next());
+  return Promise.all(lanes).then(function () {
+    return { total: tiles.length, failed: failed };
+  });
+}
+
 function buildPanel() {
   var sec = document.createElement('section');
   sec.className = 'block';
   sec.innerHTML = '<h2>Offline data</h2><div class="tmc-body"></div>' +
+    '<button class="btn wide" id="tmc-savearea">Save this map view for offline</button>' +
+    '<div class="tmc-note" id="tmc-savenote"></div>' +
     '<div class="tmc-btns">' +
     '<button class="btn ghost" id="tmc-keep" title="Ask the browser not to evict this data">Keep offline</button>' +
     '<button class="btn ghost" id="tmc-clear">Clear cache</button></div>' +
     '<div class="tmc-note" id="tmc-persist"></div>';
   document.querySelector('.panel').appendChild(sec);
   panelEl = sec;
+
+  var saveBtn = sec.querySelector('#tmc-savearea');
+  var saveNote = sec.querySelector('#tmc-savenote');
+  saveBtn.addEventListener('click', function () {
+    if (saveBtn.disabled) return;
+    var n = viewTiles(1).length;
+    saveBtn.disabled = true;
+    saveNote.textContent = 'Saving ' + n + ' tiles…';
+    saveView(function (d, total) {
+      saveNote.textContent = 'Saving ' + d + ' of ' + total + ' tiles…';
+    }).then(function (r) {
+      saveNote.textContent = r.failed
+        ? 'Saved ' + (r.total - r.failed) + ' of ' + r.total + ' tiles; ' +
+          r.failed + ' could not be fetched.'
+        : 'Saved ' + r.total + ' tiles. This view will work offline.';
+      saveBtn.disabled = false;
+      refreshPanel();
+      if (window.TMOffline) TMOffline.refresh();
+    });
+  });
 
   sec.querySelector('#tmc-clear').addEventListener('click', function () {
     idbClear().then(function () {
@@ -590,6 +688,9 @@ return {
   _size: idbSize,
   _quota: quota,
   _refreshPanel: refreshPanel,
+  _viewTiles: viewTiles,
+  _tileUrl: activeTileUrl,
+  _saveView: saveView,
   _dbReady: function () { return ensureDB().then(function (d) { return !!d; }); },
   _config: { CELL: CELL, MIN_ZOOM: MIN_ZOOM, MAX_CELLS_PER_VIEW: MAX_CELLS_PER_VIEW }
 };
