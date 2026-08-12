@@ -415,7 +415,24 @@ function renderLayerToggles() {
   }).join('');
 }
 
+/**
+ * On a phone the status chips collapse to dots to stay off the map. Tapping one
+ * expands it; tapping elsewhere collapses them again. Leaflet already stops
+ * these clicks reaching the map, so this cannot pan or place a waypoint.
+ */
+function wireStatusChips() {
+  document.addEventListener('click', function (ev) {
+    var chip = ev.target.closest && ev.target.closest('.tm-tilestatus, .tmc, .tmo');
+    document.querySelectorAll('.tmx-open').forEach(function (el) {
+      if (el !== chip) el.classList.remove('tmx-open');
+    });
+    // Buttons inside a chip do their own job; do not toggle on those.
+    if (chip && !(ev.target.tagName === 'BUTTON')) chip.classList.toggle('tmx-open');
+  });
+}
+
 function wireUI() {
+  wireStatusChips();
   document.getElementById('profile-close').addEventListener('click', function () {
     document.getElementById('profile').hidden = true;
     document.body.classList.remove('tm-profile-open');

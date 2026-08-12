@@ -16,7 +16,7 @@
  *   would double the storage and answer to nobody.
  */
 
-var VERSION = '108b81379425';
+var VERSION = 'fddd70b1fcb9';
 var SHELL_CACHE = 'tm-shell-' + VERSION;
 var TILE_CACHE  = 'tm-tiles-v1';
 var TILE_LIMIT  = 1200;                 // roughly 25-30 MB of raster tiles

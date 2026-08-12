@@ -459,3 +459,54 @@ select {
    the tile "Retry failed" button must stay reachable. */
 .leaflet-bottom.leaflet-right { transition: transform .18s ease; }
 body.tm-profile-open .leaflet-bottom.leaflet-right { transform: translateY(-198px); }
+
+/* ---------- status chips ---------- */
+/*
+   The three status chips (tiles, huts, offline) are separate Leaflet controls.
+   Being `display:flex` block-level, they stretched to the full width of the
+   control corner — 300 px each on a 375 px phone, together covering 18% of the
+   map. Sizing them to their content fixes that everywhere.
+*/
+/* `body` prefix is deliberate: each module injects its own <style> into <head>
+   after this file, so an equally specific rule here would lose the cascade. */
+body .tm-tilestatus, body .tmc, body .tmo {
+  display: inline-flex;
+  width: auto;
+  max-width: calc(100vw - 24px);
+}
+
+@media (max-width: 900px) {
+  /*
+     On a phone even a content-sized chip is a banner. Collapse each to a dot
+     and let it speak only when it has something to say — a failure, work in
+     progress, or a tap from the user. Steady-state "everything is fine" does
+     not deserve screen space on a 375 px map.
+  */
+  body .tm-tilestatus, body .tmc, body .tmo {
+    width: 26px; height: 26px; padding: 0;
+    border-radius: 50%; justify-content: center;
+    margin: 0 8px 6px 0; overflow: hidden;
+    transition: width .15s ease;
+  }
+  body .tm-tilestatus .txt, body .tmc .t, body .tmo .t,
+  body .tm-tilestatus .retry, body .tmc button { display: none; }
+
+  /* Expanded: something needs attention, or the user tapped it. */
+  body .tm-tilestatus.busy, body .tm-tilestatus.bad,
+  body .tmc.busy, body .tmc.bad,
+  body .tmo.installing, body .tmo.offline,
+  body .tm-tilestatus.tmx-open, body .tmc.tmx-open, body .tmo.tmx-open {
+    width: auto; height: auto; padding: 5px 9px;
+    border-radius: 20px; justify-content: flex-start;
+  }
+  body .tm-tilestatus.busy .txt, body .tm-tilestatus.bad .txt,
+  body .tmc.busy .t, body .tmc.bad .t,
+  body .tmo.installing .t, body .tmo.offline .t,
+  body .tm-tilestatus.tmx-open .txt, body .tmc.tmx-open .t,
+  body .tmo.tmx-open .t { display: inline; }
+  body .tm-tilestatus.bad .retry, body .tmc.bad button,
+  body .tm-tilestatus.tmx-open .retry, body .tmc.tmx-open button { display: inline-block; }
+
+  /* A dot alone is not an obvious control; hint that it can be tapped. */
+  body .tm-tilestatus, body .tmc, body .tmo { cursor: pointer; }
+}
