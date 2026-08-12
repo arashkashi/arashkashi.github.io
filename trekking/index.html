@@ -7,6 +7,15 @@
 
 <link rel="stylesheet" href="vendor/leaflet.css">
 <link rel="stylesheet" href="styles.css">
+
+<!-- Installable + offline. The manifest and icons are harmless over file://;
+     the service worker registration in offline.js no-ops there. -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2f5d46">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TrekkingMap">
 </head>
 <body>
 
@@ -78,6 +87,7 @@
 <script src="cache.js"></script>
 <script src="contextmenu.js"></script>
 <script src="locate.js"></script>
+<script src="offline.js"></script>
 <script src="planner.js"></script>
 <script src="app.js"></script>
 </body>
