@@ -15,6 +15,9 @@ window.TMOffline = (function () {
 
 var app, reg = null, state = 'unknown', tileCount = 0, swVersion = null;
 var badge = null;
+// Whether a worker was already in charge when this page loaded. Distinguishes
+// "first install" from "an update took over", which need different handling.
+var hadController = false, reloading = false;
 
 var CSS = [
   '.tmo{display:inline-flex;align-items:center;gap:7px;margin:0 10px 6px 0;padding:5px 9px;',
@@ -119,10 +122,19 @@ function register() {
     setBadge();
     return;
   }
+  hadController = !!navigator.serviceWorker.controller;
   state = 'installing';
   setBadge();
 
-  navigator.serviceWorker.register('sw.js', { scope: './' }).then(function (r) {
+  // updateViaCache:'none' is essential, not decoration. Without it the browser
+  // may satisfy its update check for sw.js from the HTTP cache, see no change,
+  // and keep serving the previous release indefinitely — a deploy that appears
+  // to have silently failed.
+  navigator.serviceWorker.register('sw.js', { scope: './', updateViaCache: 'none' })
+    .then(function (r) {
+    // Ask the browser to look for a newer worker now rather than whenever it
+    // next feels like it; otherwise a fresh deploy can go unnoticed for a while.
+    if (r.update) { try { r.update(); } catch (e) { /* not fatal */ } }
     reg = r;
     if (r.active && navigator.serviceWorker.controller) {
       state = 'ready';
@@ -142,7 +154,19 @@ function register() {
   });
 
   navigator.serviceWorker.addEventListener('controllerchange', function () {
-    state = 'ready'; setBadge(); refresh();
+    state = 'ready';
+    setBadge();
+    refresh();
+
+    // A NEW worker just took over a page that already had one — this is an
+    // update, and the page is currently showing files from the old cache.
+    // Without this reload the user sees the previous version on this visit and
+    // the new one only on the next, which looks exactly like a broken deploy.
+    // Guarded so it can fire at most once and never on a first install.
+    if (hadController && !reloading) {
+      reloading = true;
+      location.reload();
+    }
   });
 }
 
@@ -189,7 +213,9 @@ return {
   },
   refresh: refresh,
   _state: function () { return state; },
-  _register: register
+  _register: register,
+  _hadController: function () { return hadController; },
+  _reloading: function () { return reloading; }
 };
 
 })();
