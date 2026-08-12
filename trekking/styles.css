@@ -330,10 +330,59 @@ select {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ---------- small screens ---------- */
+/*
+   On a phone the map is the product, not the sidebar. The stacked layout used
+   to put the panel first and leave the map ~300 px tall, most of which the
+   elevation profile then covered. Map goes on top, gets a guaranteed share of
+   the screen, and the panel scrolls beneath it.
+*/
 @media (max-width: 900px) {
   .shell { flex-direction: column; }
-  .panel { flex: 0 0 auto; max-height: 45vh; border-right: none; border-bottom: 1px solid var(--line); }
+
+  .mapwrap {
+    order: -1;                       /* map above the panel, whatever the DOM says */
+    flex: 0 0 58vh;
+    min-height: 300px;
+  }
+
+  .panel {
+    flex: 1 1 auto;
+    max-height: none;
+    border-right: none;
+    border-top: 1px solid var(--line);
+    padding: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .topstats { display: none; }
+  .topbar { padding: 8px 14px; }
+  .brand h1 { font-size: 17px; }
+  .brand p { font-size: 11px; }
+
+  /* The profile is a fixed 190 px on desktop; on a 667 px-tall phone that eats
+     most of the map. Shorter, and it still reads. */
+  .profile { height: 132px; left: 8px; right: 8px; bottom: 8px; }
+  .profile-head { padding: 5px 9px 2px; }
+  .profile-head h3 { font-size: 10px; }
+  body.tm-profile-open .leaflet-bottom.leaflet-right { transform: translateY(-140px); }
+
+  /* Status chips stack and collide with the attribution at this width. */
+  .tm-tilestatus, .tmc { font-size: 10.5px; padding: 4px 7px; margin: 0 6px 4px 0; }
+  .tm-tilestatus .retry, .tmc button { padding: 1px 6px; font-size: 10px; }
+  .leaflet-control-attribution { font-size: 9px; }
+
+  /* Touch targets: the sidebar controls are laid out for a mouse. */
+  .btn { padding: 11px 12px; }
+  .gpx-item button, .rb-leg button { padding: 6px 8px; font-size: 14px; }
+  .gpx-scrub input, .rb-split input[type=range] { height: 26px; }
+  .tm-res .row { padding: 10px 10px; }
+}
+
+/* Very small / landscape phones: give the map even more of the screen. */
+@media (max-width: 900px) and (max-height: 480px) {
+  .mapwrap { flex: 0 0 70vh; min-height: 220px; }
+  .profile { height: 108px; }
 }
 
 /* zoom-threshold notes inside layer toggle labels */
