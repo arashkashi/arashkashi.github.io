@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrekkingMap — Liguria Multi-Day Hiking Planner</title>
+
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="mark">▲</span>
+    <div>
+      <h1>TrekkingMap <em>Liguria</em></h1>
+      <p>Alta Via dei Monti Liguri · hut-to-hut planner</p>
+    </div>
+  </div>
+  <div class="topstats">
+    <div class="stat"><b id="stat-huts">–</b><span>huts &amp; shelters</span></div>
+    <div class="stat"><b id="stat-trails">–</b><span>waymarked trails</span></div>
+    <div class="stat"><b id="stat-contours">–</b><span>contour lines</span></div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <aside class="panel">
+
+    <section class="block">
+      <h2>Map layers</h2>
+      <div class="layers" id="layer-toggles"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <footer class="credit">
+      Map data © <b>OpenStreetMap</b> contributors (ODbL) · Elevation from SRTM
+      via AWS Terrain Tiles · Topographic rendering © <b>OpenTopoMap</b> (CC-BY-SA)
+    </footer>
+  </aside>
+
+  <main class="mapwrap">
+    <div id="map"></div>
+    <div class="profile" id="profile" hidden>
+      <div class="profile-head">
+        <h3 id="profile-title">Elevation profile</h3>
+        <button id="profile-close" title="Hide">✕</button>
+      </div>
+      <div id="profile-chart"></div>
+    </div>
+  </main>
+
+</div>
+
+<div id="loading" class="loading"><div class="spinner"></div><p>Loading Liguria terrain data…</p></div>
+
+<script src="vendor/leaflet.js"></script>
+
+<!-- Local OpenStreetMap + terrain data. These are plain .js files assigning to
+     window globals rather than .geojson loaded via fetch(), because Safari
+     blocks fetch() of local files when the page is opened over file://. -->
+<script src="data/dem.js"></script>
+<script src="data/contours_major.js"></script>
+<script src="data/contours_minor.js"></script>
+<script src="data/huts.js"></script>
+<script src="data/peaks.js"></script>
+<script src="data/water.js"></script>
+<script src="data/avml.js"></script>
+<script src="data/routes.js"></script>
+<script src="data/sample_gpx.js"></script>
+
+<script src="tiles.js"></script>
+<script src="search.js"></script>
+<script src="gpx.js"></script>
+<script src="route.js"></script>
+<script src="cache.js"></script>
+<script src="contextmenu.js"></script>
+<script src="locate.js"></script>
+<script src="planner.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
